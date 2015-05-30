@@ -20,7 +20,7 @@ from tempfile import TemporaryFile
 from telegrambot import git, auth
 
 
-CENTRAL_REPO_URL="https://github.com/datamachine/telegram-pybot-plugin-repo"
+CENTRAL_REPO_URL="https://github.com/asdofindia/telegram-pybot-plugin-repo"
 CENTRAL_REPO_NAME="main"
 
 PKG_BASE_DIR="pkgs"
@@ -74,7 +74,7 @@ class PackageManagerPlugin(plugintypes.TelegramPlugin):
         except:
             print(sys.exc_info()[0])
         return None
-        
+
     def _reload_repos(self, msg=None):
         pkg_repo_dir = Path(PKG_REPO_DIR)
         if not pkg_repo_dir.exists():
@@ -84,10 +84,10 @@ class PackageManagerPlugin(plugintypes.TelegramPlugin):
         for repo in pkg_repo_dir.iterdir():
             repo_json = self._load_repo_object(repo.name)
             if repo_json:
-                self.repos[repo.name] = repo_json               
+                self.repos[repo.name] = repo_json
             elif msg:
                 self.respond_to_msg(msg, "Error reloading repo: {}".format(repo.name))
-            
+
 
     def activate_plugin(self):
         self.repos = {}
@@ -98,7 +98,7 @@ class PackageManagerPlugin(plugintypes.TelegramPlugin):
             self.reload_plugins()
 
         self._reload_repos()
-            
+
     def _get_repo(self, repo_name):
         return self.repos.get(repo_name, None)
 
@@ -172,7 +172,7 @@ class PackageManagerPlugin(plugintypes.TelegramPlugin):
 
         gs = git.pull(str(pkg_path))
         self.respond_to_msg(msg, "{} {}: {}{}".format(gs.exit_status, pkg_name, gs.stdout, gs.stderr))
-        
+
 
     @auth.authorize(groups=["admins"])
     def upgrade_all(self, msg, matches):
@@ -195,7 +195,7 @@ class PackageManagerPlugin(plugintypes.TelegramPlugin):
 
         if not trash_dir.exists():
             trash_dir.mkdir(parents=True)
-        
+
         for pkg_name in matches.group(2).split():
             pkg_path = install_dir / pkg_name
 
@@ -274,9 +274,7 @@ class PackageManagerPlugin(plugintypes.TelegramPlugin):
             if repo_json:
                 pkgs += "{} | {} | {}\n".format(f, repo_json["version"], repo_json["description"])
         return pkgs
- 
+
     def reload_plugins(self):
         self.plugin_manager.collectPlugins()
         return "Plugins reloaded"
-
-
